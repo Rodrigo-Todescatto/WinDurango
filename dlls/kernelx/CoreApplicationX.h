@@ -37,6 +37,11 @@ public:
 	INT32 _abi_Run(winrt::Windows::ApplicationModel::Core::IFrameworkViewSource const& viewSource) override;
 	INT32 _abi_Exit() override;
 
+	INT32 _abi_Id() override;
+	INT32 _abi_MainView() override;
+	INT32 _abi_Properties() override;
+	INT32 _abi_Views() override;
+
 private:
 	winrt::Windows::ApplicationModel::Core::CoreApplication* m_applicationCore;
 

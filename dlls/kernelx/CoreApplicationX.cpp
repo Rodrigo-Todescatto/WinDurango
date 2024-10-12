@@ -89,3 +89,23 @@ INT32 CoreApplicationX::_abi_Exit()
 {
 	return m_applicationCore->Exit();
 }
+
+INT32 CoreApplicationX::_abi_Id()
+{
+	return m_applicationCore->Id();
+}
+
+INT32 CoreApplicationX::_abi_MainView()
+{
+	return m_applicationCore->MainView();
+}
+
+INT32 CoreApplicationX::_abi_Properties()
+{
+	return m_applicationCore->Properties();
+}
+
+INT32 CoreApplicationX::_abi_Views()
+{
+	return m_applicationCore->Views();
+}

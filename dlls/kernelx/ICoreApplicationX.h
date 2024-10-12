@@ -39,4 +39,9 @@ public:
 	virtual INT32 _abi_EnablePrelaunch(bool const& value) = 0;
 	virtual INT32 _abi_Run(winrt::Windows::ApplicationModel::Core::IFrameworkViewSource const& viewSource) = 0;
 	virtual INT32 _abi_Exit() = 0;
+
+	virtual INT32 _abi_Id() = 0;
+	virtual INT32 _abi_MainView() = 0;
+	virtual INT32 _abi_Properties() = 0;
+	virtual INT32 _abi_Views() = 0;
 };
