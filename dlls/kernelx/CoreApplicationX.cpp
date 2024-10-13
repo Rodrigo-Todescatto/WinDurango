@@ -2,110 +2,87 @@
 // ReSharper disable CppFunctionResultShouldBeUsed
 // ReSharper disable CppParameterMayBeConst
 #include "pch.h"
-#include <winrt/windows.foundation.collections.h>
 #include "CoreApplicationX.h"
 
-INT32 CoreApplicationX::_abi_BackgroundActivated(winrt::Windows::Foundation::EventHandler<BackgroundActivatedEventArgs> const& handler)
+INT32 CoreApplicationX::_abi_add_Resuming(__FIEventHandler_1_IInspectable* handler, EventRegistrationToken* token)
 {
-	return m_applicationCore->BackgroundActivated(handler);
+	return m_IapplicationCore->add_Resuming(handler, token);
 }
 
-INT32 CoreApplicationX::_abi_EnteredBackground(winrt::Windows::Foundation::EventHandler<winrt::Windows::ApplicationModel::EnteredBackgroundEventArgs> const& handler)
+INT32 CoreApplicationX::_abi_remove_Resuming(EventRegistrationToken token)
 {
-	return m_applicationCore->EnteredBackground(handler);
+	return m_IapplicationCore->remove_Resuming(token);
 }
 
-INT32 CoreApplicationX::_abi_Exiting(winrt::Windows::Foundation::EventHandler<winrt::Windows::Foundation::IInspectable> const& handler)
+INT32 CoreApplicationX::_abi_add_Suspending(__FIEventHandler_1_Windows__CApplicationModel__CSuspendingEventArgs* handler, EventRegistrationToken* token)
 {
-	return m_applicationCore->Exiting(handler);
+	return m_IapplicationCore->add_Suspending(handler, token);
 }
 
-INT32 CoreApplicationX::_abi_LeavingBackground(winrt::Windows::Foundation::EventHandler<winrt::Windows::ApplicationModel::LeavingBackgroundEventArgs> const& handler)
+INT32 CoreApplicationX::_abi_remove_Suspending(EventRegistrationToken token)
 {
-	return m_applicationCore->LeavingBackground(handler);
+	return m_IapplicationCore->remove_Suspending(token);
 }
 
-INT32 CoreApplicationX::_abi_Resuming(winrt::Windows::Foundation::EventHandler<winrt::Windows::Foundation::IInspectable> const& handler)
+INT32 CoreApplicationX::_abi_get_ResourceAvailability()
 {
-	return m_applicationCore->Resuming(handler);
+	//Stubbed at this moment.
+	return 0;
 }
 
-INT32 CoreApplicationX::_abi_Suspending(winrt::Windows::Foundation::EventHandler<winrt::Windows::ApplicationModel::SuspendingEventArgs> const& handler)
+INT32 CoreApplicationX::_abi_add_ResourceAvailabilityChanged(winrt::Windows::Foundation::EventHandler<IInspectable>* handler, EventRegistrationToken* token)
 {
-	return m_applicationCore->Suspending(handler);
+	//Stubbed at this moment.
+	return 0;
 }
 
-INT32 CoreApplicationX::_abi_UnhandledErrorDetected(winrt::Windows::Foundation::EventHandler<winrt::Windows::ApplicationModel::Core::UnhandledErrorDetectedEventArgs> const& handler)
+INT32 CoreApplicationX::_abi_remove_ResourceAvailabilityChanged(EventRegistrationToken token)
 {
-	return m_applicationCore->UnhandledErrorDetected(handler);
+	//Stubbed at this moment.
+	return 0;
 }
 
-INT32 CoreApplicationX::_abi_RequestRestartAsync(winrt::hstring const& launchArguments)
+INT32 CoreApplicationX::_abi_RunWithActivationFactories(ABI::Windows::Foundation::IGetActivationFactory* activationFactoryCallback)
 {
-	return m_applicationCore->RequestRestartAsync(launchArguments);
+	return m_IapplicationCore->RunWithActivationFactories(activationFactoryCallback);
 }
 
-INT32 CoreApplicationX::_abi_RequestRestartForUserAsync(winrt::Windows::System::User const& user, winrt::hstring const& launchArguments)
+INT32 CoreApplicationX::_abi_GetCurrentView(ABI::Windows::ApplicationModel::Core::ICoreApplicationView** value)
 {
-	return m_applicationCore->RequestRestartForUserAsync(user, launchArguments);
+	return m_IapplicationCore->GetCurrentView(value);
 }
 
-INT32 CoreApplicationX::_abi_IncrementApplicationUseCount()
+INT32 CoreApplicationX::_abi_Run(ABI::Windows::ApplicationModel::Core::IFrameworkViewSource* viewSource)
 {
-	return m_applicationCore->IncrementApplicationUseCount();
+	return m_IapplicationCore->Run(viewSource);
 }
 
-INT32 CoreApplicationX::_abi_DecrementApplicationUseCount()
+INT32 CoreApplicationX::Run(ABI::Windows::ApplicationModel::Core::IFrameworkViewSource* viewSource)
 {
-	return m_applicationCore->DecrementApplicationUseCount();
+	return m_IapplicationCore->Run(viewSource);
 }
 
-INT32 CoreApplicationX::_abi_RunWithActivationFactories(winrt::Windows::Foundation::IGetActivationFactory const& activationFactoryCallback)
+INT32 CoreApplicationX::_abi_get_Id(HSTRING* value)
 {
-	return m_applicationCore->RunWithActivationFactories(activationFactoryCallback);
+	return m_IapplicationCore->get_Id(value);
 }
 
-INT32 CoreApplicationX::_abi_CreateNewView()
+INT32 CoreApplicationX::_abi_get_Properties(ABI::Windows::Foundation::Collections::IPropertySet** value)
 {
-	return m_applicationCore->CreateNewView();
+	return m_IapplicationCore->get_Properties(value);
 }
 
-INT32 CoreApplicationX::_abi_GetCurrentView()
+HRESULT CoreApplicationX::QueryInterface(const IID& riid, void** ppvObject)
 {
-	return m_applicationCore->GetCurrentView();
+	return m_coreWindow->QueryInterface(riid, ppvObject);
 }
 
-INT32 CoreApplicationX::_abi_EnablePrelaunch(bool const& value)
+ULONG CoreApplicationX::AddRef()
 {
-	return m_applicationCore->EnablePrelaunch(value);
+	return m_coreWindow->AddRef();
 }
 
-INT32 CoreApplicationX::_abi_Run(winrt::Windows::ApplicationModel::Core::IFrameworkViewSource const& viewSource)
+ULONG CoreApplicationX::Release()
 {
-	return m_applicationCore->Run(viewSource);
-}
-
-INT32 CoreApplicationX::_abi_Exit()
-{
-	return m_applicationCore->Exit();
-}
-
-INT32 CoreApplicationX::_abi_Id()
-{
-	return m_applicationCore->Id();
-}
-
-INT32 CoreApplicationX::_abi_MainView()
-{
-	return m_applicationCore->MainView();
-}
-
-INT32 CoreApplicationX::_abi_Properties()
-{
-	return m_applicationCore->Properties();
-}
-
-INT32 CoreApplicationX::_abi_Views()
-{
-	return m_applicationCore->Views();
+	return m_coreWindow->Release();
 }
