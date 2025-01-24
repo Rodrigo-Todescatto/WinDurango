@@ -1,5 +1,7 @@
 #pragma once
 
+typedef NTSTATUS(NTAPI* RtlSetLastWin32ErrorAndNtStatusFromNtStatus_t)(NTSTATUS status);
+
 typedef NTSTATUS(NTAPI* NtAllocateVirtualMemory_t)(
 	HANDLE ProcessHandle,
 	PVOID* BaseAddress,

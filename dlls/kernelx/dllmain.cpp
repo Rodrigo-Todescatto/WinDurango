@@ -202,12 +202,12 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Motorsport 5.
 		if (GamePackage == L"Forza_8wekyb3d8bbwe")
 		{
-			printf("Forza Motorsport 5");
+			printf("Forza Motorsport 5\n");
 		}
 		//Rodrigo Todescatto: Forza Horizon 2 Presents Fast & Furious.
 		if (GamePackage == L"Spire_8wekyb3d8bbwe")
 		{
-			printf("Forza Horizon 2 Presents Fast & Furious");
+			printf("Forza Horizon 2 Presents Fast & Furious\n");
 		}
 #endif
 

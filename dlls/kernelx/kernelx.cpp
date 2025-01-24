@@ -1,7 +1,54 @@
 #include "pch.h"
 
+RtlSetLastWin32ErrorAndNtStatusFromNtStatus_t RtlSetLastWin32ErrorAndNtStatusFromNtStatus;
 NtAllocateVirtualMemory_t NtAllocateVirtualMemory;
 NtFreeVirtualMemory_t NtFreeVirtualMemory;
+
+LPVOID __stdcall VirtualAllocEx_X(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect)
+{
+    //Rodrigo Todescatto: This should fix the heap corruption on Forza titles for now.
+    int v1;
+    LPVOID v2;
+    SIZE_T v3[2];
+
+    v2 = lpAddress;
+    v3[0] = dwSize;
+
+    if ((long long)lpAddress - 1U < 0xffff)
+    {
+        v1 = -0x3ffffff3;
+    }
+    else
+    {
+        sub_18001BB8C();
+
+        if (flAllocationType == 0x40002000 || flAllocationType == 0x2000 || flAllocationType == 0x30002000)
+        {
+            v1 = NtAllocateVirtualMemory(hProcess, &v2, 0, v3, MEM_RESERVE & 0xffffffc0, flProtect);
+        }
+        if (flAllocationType == 0x40001000 || flAllocationType == 0x1000)
+        {
+            v1 = NtAllocateVirtualMemory(hProcess, &v2, 0, v3, MEM_COMMIT & 0xffffffc0, flProtect);
+        }
+        else if(flAllocationType != 0x40002000 && flAllocationType != 0x2000 && 
+        flAllocationType != 0x30002000 && flAllocationType != 0x40001000 && flAllocationType != 0x1000)
+        {
+            v1 = NtAllocateVirtualMemory(hProcess, &v2, 0, v3, flAllocationType & 0xffffffc0, flProtect);
+        }
+
+        if (-1 < v1)
+        {
+            return v2;
+        }
+    }
+
+    return (LPVOID)0x0;
+}
+
+LPVOID __stdcall VirtualAlloc_X(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect)
+{
+    return VirtualAllocEx_X((HANDLE)0xffffffffffffffff, lpAddress, dwSize, flAllocationType, flProtect);
+}
 
 //Ignoring this as for now (just hope it's not being used and it's not useful.)
 __int64 NlsUpdateLocale_X() {
@@ -297,6 +344,9 @@ static decltype(&XMemFree_X) XMemFreeRoutine_X;
 
 void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X) Free)
 {
+    //Rodrigo Todescatto: Initializing here for now because it's only called once by Forza, which should be fine.
+    InitializeCriticalSection(&XMemSetAllocationHooksLock_X);
+
     EnterCriticalSection(&XMemSetAllocationHooksLock_X);
 
     if (Alloc) {
@@ -309,7 +359,6 @@ void XMemSetAllocationHooks_X(decltype(&XMemAlloc_X) Alloc, decltype(&XMemFree_X
     }
 
     LeaveCriticalSection(&XMemSetAllocationHooksLock_X);
-
 }
 // TODO
 // absolutely temporary implementation I just want to make it work
@@ -324,7 +373,7 @@ HANDLE hCodePageKey;
 HANDLE gpACPHashN;
 char* dword_18002B84C;
 LPVOID P; // ?!?! ?
-LPVOID P_0; // ¡!¡ ¡!?!??
+LPVOID P_0; // ï¿½!ï¿½ ï¿½!?!??
 
 //sub_18001BB8C
 int IsNlsProcessInitialized;
@@ -357,6 +406,8 @@ __int64 sub_18001BB8C()
             (NtAllocateVirtualMemory_t)GetProcAddress(ntdll, "NtAllocateVirtualMemory");
         NtFreeVirtualMemory =
             (NtFreeVirtualMemory_t)GetProcAddress(ntdll, "NtFreeVirtualMemory");
+        RtlSetLastWin32ErrorAndNtStatusFromNtStatus = 
+            (RtlSetLastWin32ErrorAndNtStatusFromNtStatus_t)GetProcAddress(ntdll, "RtlSetLastWin32ErrorAndNtStatusFromNtStatus");
 
         FreeLibrary(ntdll);
     }
