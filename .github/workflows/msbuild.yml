@@ -32,20 +32,20 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install 7zip
-      run: choco install 7zip --no-progress
-
-    - name: Download external files
+    - name: Checkout private tools
+      uses: actions/checkout@v4
+      with:
+        repository: WinDurango/WinDurango-IDLs
+        token: ${{ secrets.IDL_REPO_SECRET }}
+        path: IDLs
+      
+    - name: Copying IDLs
       run: |
-        curl -L -o External.zip "${{ secrets.EXTERNALS_LINK }}"
-      env:
-        EXTERNALS_LINK: ${{ secrets.EXTERNALS_LINK }}
-
-    - name: Unzip external files
-      run: |
-        7z x External.zip -odlls/winrt_x/External
-        ls dlls/winrt_x/External
-
+        ls .
+        ls .\IDLs
+        Copy-Item -Path .\IDLs\* -Destination .\dlls\winrt_x\External\ -Recurse
+        ls .\dlls\winrt_x\External\
+        
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
