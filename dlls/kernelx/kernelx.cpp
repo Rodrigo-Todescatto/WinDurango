@@ -14,7 +14,7 @@ LPVOID __stdcall VirtualAllocEx_X(HANDLE hProcess, LPVOID lpAddress, SIZE_T dwSi
     v2 = lpAddress;
     v3[0] = dwSize;
 
-    if ((long long)lpAddress - 1U < 0xffff)
+    if ((long long)lpAddress - 1U < 0xffff && lpAddress != 0x0)
     {
         v1 = -0x3ffffff3;
     }
