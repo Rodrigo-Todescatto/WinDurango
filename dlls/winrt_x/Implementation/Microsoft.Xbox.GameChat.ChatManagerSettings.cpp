@@ -25,67 +25,75 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
 {
     uint32_t ChatManagerSettings::AudioThreadPeriodInMilliseconds()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioThreadPeriodInMilliseconds\n");
+        return 0;
     }
     void ChatManagerSettings::AudioThreadPeriodInMilliseconds(uint32_t value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioThreadPeriodInMilliseconds2\n");
     }
     uint32_t ChatManagerSettings::AudioThreadAffinityMask()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioThreadAffinityMask\n");
+        return 0;
     }
     void ChatManagerSettings::AudioThreadAffinityMask(uint32_t value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioThreadAffinityMask2\n");
     }
     int32_t ChatManagerSettings::AudioThreadPriority()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioThreadPriority\n");
+        return 0;
     }
     void ChatManagerSettings::AudioThreadPriority(int32_t value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioThreadPriority2\n");
     }
     winrt::Windows::Xbox::Chat::EncodingQuality ChatManagerSettings::AudioEncodingQuality()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioEncodingQuality\n");
+        return winrt::Windows::Xbox::Chat::EncodingQuality::High;
     }
     void ChatManagerSettings::AudioEncodingQuality(winrt::Windows::Xbox::Chat::EncodingQuality const& value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::AudioEncodingQuality2\n");
     }
     uint32_t ChatManagerSettings::JitterBufferMaxPackets()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::JitterBufferMaxPackets\n");
+        return 0;
     }
     void ChatManagerSettings::JitterBufferMaxPackets(uint32_t value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::JitterBufferMaxPackets2\n");
     }
     uint32_t ChatManagerSettings::JitterBufferLowestNeededPacketCount()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::JitterBufferLowestNeededPacketCount\n");
+        return 0;
     }
     void ChatManagerSettings::JitterBufferLowestNeededPacketCount(uint32_t value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::JitterBufferLowestNeededPacketCount2\n");
     }
     uint32_t ChatManagerSettings::JitterBufferPacketsBeforeRelaxingNeeded()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::JitterBufferPacketsBeforeRelaxingNeeded\n");
+        return 0;
     }
     void ChatManagerSettings::JitterBufferPacketsBeforeRelaxingNeeded(uint32_t value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::JitterBufferPacketsBeforeRelaxingNeeded2\n");
     }
     bool ChatManagerSettings::PerformanceCountersEnabled()
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::PerformanceCountersEnabled\n");
+        return true;
     }
     void ChatManagerSettings::PerformanceCountersEnabled(bool value)
     {
-        throw hresult_not_implemented();
+        printf("ChatManagerSettings::PerformanceCountersEnabled2\n");
     }
 
     bool m_CombineCaptureBuffersIntoSinglePacket;
@@ -131,6 +139,7 @@ namespace winrt::Microsoft::Xbox::GameChat::implementation
 
     winrt::Microsoft::Xbox::GameChat::GameChatDiagnosticsTraceLevel ChatManagerSettings::DiagnosticsTraceLevel()
     {
+
         throw hresult_not_implemented();
     }
     void ChatManagerSettings::DiagnosticsTraceLevel(winrt::Microsoft::Xbox::GameChat::GameChatDiagnosticsTraceLevel const& value)

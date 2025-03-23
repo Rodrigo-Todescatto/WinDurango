@@ -542,6 +542,10 @@ namespace wdi
 	D3DINTERFACE(ID3D11UserDefinedAnnotationX, b2daad8b, 03d4, 4dbf, 95, eb, 32, ab, 4b, 63, d0, ab) {
 
 	};
+
+	D3DINTERFACE(ID3D11PerformanceContextX, 9458FE06, C78D, 47F7, 96, A0, EC, 7B, 72, 7B, E1, E9) : public ID3D11DeviceContextX{};
+
+
 }
 
 namespace wd
@@ -641,7 +645,7 @@ namespace wd
 		{
 			if (riid == __uuidof(wdi::ID3D11DeviceContext) || riid == __uuidof(wdi::ID3D11DeviceContext1) ||
 				riid == __uuidof(wdi::ID3D11DeviceContext2) || riid == __uuidof(wdi::ID3D11DeviceContextX) ||
-				riid == __uuidof(wdi::ID3D11UserDefinedAnnotationX))
+				riid == __uuidof(wdi::ID3D11UserDefinedAnnotationX) || riid == __uuidof(wdi::ID3D11PerformanceContextX))
 			{
 				*ppvObject = this;
 				AddRef( );

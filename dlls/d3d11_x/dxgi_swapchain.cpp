@@ -2,6 +2,7 @@
 
 #include "resource.hpp"
 #include "overlay/overlay.h"
+#include <thread>
 
 HRESULT wd::dxgi_swapchain::QueryInterface(const IID& riid, void** ppvObject)
 {
@@ -35,9 +36,6 @@ HRESULT wd::dxgi_swapchain::GetDevice(const IID& riid, void** ppDevice)
 
 HRESULT wd::dxgi_swapchain::Present(UINT SyncInterval, UINT Flags)
 {
-	if (wd::g_Overlay)
-		wd::g_Overlay->Present( );
-
 	return wrapped_interface->Present(SyncInterval, Flags);
 }
 

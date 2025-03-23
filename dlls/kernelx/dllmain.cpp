@@ -6,7 +6,7 @@
 #include "Shlwapi.h"
 
 // note from unixian: i used this since using appxlauncher requires me attaching to the game after it launches
-#define WINDURANGO_WAIT_FOR_DEBUGGER 1
+#define WINDURANGO_WAIT_FOR_DEBUGGER 0
 
 //Rodrigo Todescatto: For debbuging Forza.
 #define RETURN_IF_FAILED(hr) if (FAILED(hr)) return hr
@@ -115,12 +115,12 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		//Rodrigo Todescatto: Forza Motorsport 5.
 		if (GamePackage == L"Forza_8wekyb3d8bbwe")
 		{
-			printf("Forza Motorsport 5");
+			printf("Forza Motorsport 5\n");
 		}
 		//Rodrigo Todescatto: Forza Horizon 2 Presents Fast & Furious.
 		if (GamePackage == L"Spire_8wekyb3d8bbwe")
 		{
-			printf("Forza Horizon 2 Presents Fast & Furious");
+			printf("Forza Horizon 2 Presents Fast & Furious\n");
 		}
 #endif
 
@@ -144,15 +144,23 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		XWinePatchImport(GetModuleHandleW(nullptr), GetRuntimeModule(), "?GetActivationFactoryByPCWSTR@@YAJPEAXAEAVGuid@Platform@@PEAPEAX@Z", GetActivationFactoryRedirect);
 
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueOpenFile), OpenFile_Hook);
-		DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateDirectoryA), CreateDirectoryA_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateFile2), CreateFile2_Hook);
+		//DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateFileA), CreateFileA_Hook);
+		//DetourAttach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueCopyFile2), CopyFile2_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueMoveFileExW), MoveFileExW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesW), GetFileAttributesW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExW), GetFileAttributesExW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueFindFirstFileW), FindFirstFileW_Hook);
-		DetourAttach(&reinterpret_cast<PVOID&>(TrueDeleteFileW), DeleteFileW_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueFindFirstFileA), FindFirstFileA_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueDeleteFileA), DeleteFileA_Hook);
 		//DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExW), LoadLibraryExW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryW), LoadLibraryW_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExA), LoadLibraryExA_Hook);
 		DetourAttach(&reinterpret_cast<PVOID&>(TrueCoCreateInstance), CoCreateInstance_hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExA), GetFileAttributesExA_Hook);
+		DetourAttach(&reinterpret_cast<PVOID&>(TrueRemoveDirectoryA), RemoveDirectoryA_Hook);
 
 		DetourTransactionCommit();
 
@@ -166,15 +174,23 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID reserved)
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueRoGetActivationFactory), RoGetActivationFactory_Hook);
 		
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueOpenFile), OpenFile_Hook);
-		DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateDirectoryA), CreateDirectoryA_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateFile2), CreateFile2_Hook);
+		//DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateFileA), CreateFileA_Hook);
+		//DetourDetach(&reinterpret_cast<PVOID&>(TrueCreateFileW), CreateFileW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesW), GetFileAttributesW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExW), GetFileAttributesExW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueFindFirstFileW), FindFirstFileW_Hook);
-		DetourDetach(&reinterpret_cast<PVOID&>(TrueDeleteFileW), DeleteFileW_Hook);
 		//DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExW), LoadLibraryExW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryW), LoadLibraryW_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueLoadLibraryExA), LoadLibraryExA_Hook);
 		DetourDetach(&reinterpret_cast<PVOID&>(TrueCoCreateInstance), CoCreateInstance_hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueGetFileAttributesExA), GetFileAttributesExA_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueFindFirstFileA), FindFirstFileA_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueCopyFile2), CopyFile2_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueMoveFileExW), MoveFileExW_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueDeleteFileA), DeleteFileA_Hook);
+		DetourDetach(&reinterpret_cast<PVOID&>(TrueRemoveDirectoryA), RemoveDirectoryA_Hook);
 
 		DetourTransactionCommit();
 

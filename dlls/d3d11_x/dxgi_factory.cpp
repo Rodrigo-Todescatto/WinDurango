@@ -69,6 +69,11 @@ HRESULT wd::dxgi_factory::CreateSwapChainForCoreWindow(IGraphicsUnknown* pDevice
 	}
 	else
 	{
+		if (pDesc->SwapEffect != DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL && pDesc->SwapEffect != DXGI_SWAP_EFFECT_FLIP_DISCARD)
+		{
+			pDesc->SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+		}
+
 		hr = wrapped_interface->CreateSwapChainForCoreWindow(pRealDevice, reinterpret_cast<CoreWindowWrapperX*>(pWindow)->m_realWindow, pDesc, pRestrictToOutput, &swap);
 		*ppSwapChain = reinterpret_cast<IDXGISwapChain1*>(new dxgi_swapchain(swap));
 	}

@@ -7,6 +7,7 @@
 #include "../common/debug.h"
 
 #include "contexts.h"
+#include <iostream>
 
 struct SHAPE_CONTEXTS {
     UINT32 numSrcContexts;
@@ -50,19 +51,21 @@ HRESULT AcpHalAllocateShapeContexts_X(SHAPE_CONTEXTS* ctx) {
         ctx->pcmContextArray = static_cast<SHAPE_PCM_CONTEXT*>(malloc(sizeof(SHAPE_PCM_CONTEXT) * ctx->numPcmContexts));
 
     printf("[AcpHal] allocated shape contexts\n");
-    return S_OK;
+    return E_NOTIMPL;
 }
 
 HRESULT AcpHalReleaseShapeContexts_X() {
     DEBUG_PRINT( );
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT AcpHalCreate_X(IAcpHal** acpInterface) {
 	printf("[WARNING] AcpHalCreate returns back a nullptr, the game is likely to crash!\n");
 	*acpInterface = nullptr;
-    return 0;
+    return E_NOTIMPL;
 }
+
+UINT32 AllocSize;
 
 HRESULT ApuAlloc_X(
          void** virtualAddress,
@@ -72,20 +75,27 @@ HRESULT ApuAlloc_X(
          UINT32 flags
 )
 {
-    alignmentInBytes = 4;
     DEBUG_PRINT( );
-    return 0;
+    AllocSize = sizeInBytes;
+    std::cout << "ACPHAL::ApuAlloc_X flags: " << flags << std::endl;
+  
+    _aligned_malloc(sizeInBytes, alignmentInBytes);
+
+    std::cout << "ACPHAL::ApuAlloc_X last error: " << GetLastError( ) << std::endl;
+
+    return S_OK;
 }
 
 HRESULT ApuCreateHeap_X(size_t initialSize, size_t maximumSize) {
-    // Don't think we need that as this is for chaning memory pool iirc...
-    return 0;
+    DEBUG_PRINT( );
+    HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, initialSize, maximumSize);
+    return S_OK;
 }
 
 HRESULT ApuFree_X(void* virtualAddress) {
     DEBUG_PRINT( );
-    free(virtualAddress);
-    return 0;
+    VirtualFree(virtualAddress, AllocSize, MEM_RELEASE);
+    return S_OK;
 }
 
 HRESULT ApuHeapGetState_X(

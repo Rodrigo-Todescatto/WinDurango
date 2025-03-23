@@ -3,11 +3,35 @@
 #include "resource.hpp"
 #include "view.hpp"
 
+#define D3D11_MISC_FLAGS_MASK (D3D11_RESOURCE_MISC_TILE_POOL | D3D11_RESOURCE_MISC_TILED)
+#define D3D11X_RESOURCE_MISC_ESRAM_RESIDENT 0x20000
+#define D3D11_RESOURCE_MISC_TILE_POOL_X 0x4000000
+#define D3D11_RESOURCE_MISC_TILED_X 0x8000000
+
 HRESULT wd::device_x::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Buffer** ppBuffer)
 {
+	auto pDesc2 = *pDesc;
+	pDesc2.MiscFlags &= D3D11_MISC_FLAGS_MASK;
+
+
+	if (pDesc->MiscFlags == 0x20020)
+	{
+		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+	}
+
+	if (pDesc->MiscFlags == 0x20)
+	{
+		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+	}
+
+	if (pDesc->MiscFlags == 0x4)
+	{
+		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+	}
+
 	ID3D11Buffer* buffer = nullptr;
-	HRESULT hr = wrapped_interface->CreateBuffer(pDesc, pInitialData, &buffer);
+	HRESULT hr = wrapped_interface->CreateBuffer(&pDesc2, pInitialData, &buffer);
 
 	if (ppBuffer != nullptr)
 	{
@@ -15,6 +39,7 @@ HRESULT wd::device_x::CreateBuffer(const D3D11_BUFFER_DESC* pDesc, const D3D11_S
 	}
 
 	return hr;
+
 }
 
 HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
@@ -36,8 +61,51 @@ HRESULT wd::device_x::CreateTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, const D
 HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
 	ID3D11Texture2D** ppTexture2D)
 {
+	auto pDesc2 = *pDesc;
+	pDesc2.MiscFlags &= D3D11_MISC_FLAGS_MASK;
+
+	if (pDesc->MiscFlags & D3D11_RESOURCE_MISC_TILE_POOL_X)
+	{
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_TILE_POOL;
+		pInitialData = NULL;
+		pDesc2.BindFlags = 0;
+	}
+	if (pDesc->MiscFlags & D3D11_RESOURCE_MISC_TILED_X)
+	{
+		pDesc2.MiscFlags |= D3D11_RESOURCE_MISC_TILED;
+		pInitialData = NULL;
+		pDesc2.BindFlags = 0;
+	}
+
+	if (pDesc->MiscFlags == 0x40000)
+	{
+		pDesc2.MiscFlags = 0;
+	}
+
+	if (pDesc->MiscFlags == 0x4)
+	{
+		pDesc2.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+	}
+
+	if (pDesc->MiscFlags == D3D11X_RESOURCE_MISC_ESRAM_RESIDENT)
+	{
+		VirtualAlloc(&pInitialData, 0x3D0900, MEM_COMMIT, PAGE_READWRITE);
+		pDesc2.MiscFlags = 0;
+	}
+
+	if (pDesc->SampleDesc.Count > 1)
+	{
+		pDesc2.MiscFlags = 0;
+	}
+
+	if (pDesc->SampleDesc.Quality == 2)
+	{
+		pDesc2.SampleDesc.Quality = 0;
+	}
+
 	ID3D11Texture2D* texture2d = nullptr;
-	HRESULT hr = wrapped_interface->CreateTexture2D(pDesc, pInitialData, &texture2d);
+
+	HRESULT hr = wrapped_interface->CreateTexture2D(&pDesc2, pInitialData, &texture2d);
 
 	printf("[CreateTexture2D] created texture at 0x%llX\n", texture2d);
 
@@ -47,6 +115,7 @@ HRESULT wd::device_x::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, const D
 	}
 
 	return hr;
+
 }
 
 HRESULT wd::device_x::CreateTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, const D3D11_SUBRESOURCE_DATA* pInitialData,
@@ -127,6 +196,11 @@ HRESULT wd::device_x::CreateDepthStencilView(ID3D11Resource* pResource, const D3
 
 HRESULT wd::device_x::CreateDeferredContext(UINT ContextFlags, ID3D11DeviceContext** ppDeferredContext)
 {
+	if (ContextFlags != 0)
+	{
+		ContextFlags = 0;
+	}
+
 	::ID3D11DeviceContext* ctx{};
 	HRESULT hr = wrapped_interface->CreateDeferredContext(ContextFlags, &ctx);
 
@@ -191,7 +265,7 @@ HRESULT wd::device_x::SetDriverHint(UINT Feature, UINT Value)
 HRESULT wd::device_x::CreateDmaEngineContext(const wdi::D3D11_DMA_ENGINE_CONTEXT_DESC* pDmaEngineContextDesc,
 										 wdi::ID3D11DmaEngineContextX** ppDmaDeviceContext)
 {
-	throw std::logic_error("Not implemented");
+	return S_OK;
 }
 
 BOOL wd::device_x::IsFencePending(UINT64 Fence)
@@ -207,25 +281,49 @@ BOOL wd::device_x::IsResourcePending(ID3D11Resource* pResource)
 HRESULT wd::device_x::CreatePlacementBuffer(const D3D11_BUFFER_DESC* pDesc, void* pVirtualAddress,
 										ID3D11Buffer** ppBuffer)
 {
-	throw std::logic_error("Not implemented");
+	D3D11_SUBRESOURCE_DATA initData;
+	initData.pSysMem = pVirtualAddress;
+
+	CreateBuffer(pDesc, &initData, ppBuffer);
+
+	return S_OK;
 }
 
 HRESULT wd::device_x::CreatePlacementTexture1D(const D3D11_TEXTURE1D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
 										   void* pVirtualAddress, ID3D11Texture1D** ppTexture1D)
 {
-	throw std::logic_error("Not implemented");
+	auto initData = new D3D11_SUBRESOURCE_DATA[pDesc->MipLevels * pDesc->ArraySize];
+	initData->pSysMem = pVirtualAddress;
+	initData->SysMemPitch = Pitch;
+
+	CreateTexture1D(pDesc, initData, ppTexture1D);
+
+	return S_OK;
 }
 
 HRESULT wd::device_x::CreatePlacementTexture2D(const D3D11_TEXTURE2D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
 										   void* pVirtualAddress, ID3D11Texture2D** ppTexture2D)
 {
-	throw std::logic_error("Not implemented");
+	auto initData = new D3D11_SUBRESOURCE_DATA[pDesc->MipLevels * pDesc->ArraySize];
+	initData->pSysMem = pVirtualAddress;
+	
+	CreateTexture2D(pDesc, 0, ppTexture2D);
+	
+	delete[] initData;
+
+	return S_OK;
 }
 
 HRESULT wd::device_x::CreatePlacementTexture3D(const D3D11_TEXTURE3D_DESC* pDesc, UINT TileModeIndex, UINT Pitch,
 										   void* pVirtualAddress, ID3D11Texture3D** ppTexture3D)
 {
-	throw std::logic_error("Not implemented");
+	auto initData = new D3D11_SUBRESOURCE_DATA[pDesc->MipLevels];
+	initData->pSysMem = pVirtualAddress;
+	initData->SysMemPitch = Pitch;
+
+	CreateTexture3D(pDesc, initData, ppTexture3D);
+
+	return S_OK;
 }
 
 void wd::device_x::GetTimestamps(UINT64* pGpuTimestamp, UINT64* pCpuRdtscTimestamp)
@@ -246,7 +344,7 @@ HRESULT wd::device_x::CreateDeferredContextX(UINT Flags, wdi::ID3D11DeviceContex
 
 void wd::device_x::GarbageCollect(UINT Flags)
 {
-	throw std::logic_error("Not implemented");
+
 }
 
 HRESULT wd::device_x::CreateDepthStencilStateX(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilStateDesc,
@@ -315,7 +413,7 @@ void wd::device_x::PlaceSwapChainView(ID3D11Resource* pSwapChainBuffer, ID3D11Vi
 
 void wd::device_x::SetDebugFlags(UINT Flags)
 {
-	throw std::logic_error("Not implemented");
+	
 }
 
 UINT wd::device_x::GetDebugFlags( )
@@ -341,5 +439,6 @@ HRESULT wd::device_x::SetGpuMemoryPriority(UINT Priority)
 
 void wd::device_x::GetGpuHardwareConfiguration(wdi::D3D11X_GPU_HARDWARE_CONFIGURATION* pGpuHardwareConfiguration)
 {
-	throw std::logic_error("Not implemented");
+	printf("STUBBED: device_x::GetGpuHardwareConfiguration was called!!!\n");
+	//throw std::logic_error("Not implemented");
 }

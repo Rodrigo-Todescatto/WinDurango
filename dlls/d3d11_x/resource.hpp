@@ -197,7 +197,7 @@ namespace wd
 
 		HRESULT QueryInterface(const IID& riid, void** ppvObject) override
 		{
-			if (riid == __uuidof(wdi::ID3D11Texture2D))
+			if (riid == __uuidof(wdi::ID3D11Texture2D) || riid == __uuidof(wdi::ID3D11Resource))
 			{
 				*ppvObject = this;
 				AddRef( );

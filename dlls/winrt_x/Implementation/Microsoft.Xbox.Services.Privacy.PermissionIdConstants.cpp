@@ -25,58 +25,72 @@ namespace winrt::Microsoft::Xbox::Services::Privacy::implementation
 {
     hstring PermissionIdConstants::CommunicateUsingText()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::CommunicateUsingText\n");
+        return L"";
     }
     hstring PermissionIdConstants::CommunicateUsingVideo()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::CommunicateUsingVideo\n");
+        return L"";
     }
     hstring PermissionIdConstants::CommunicateUsingVoice()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::CommunicateUsingVoice\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetProfile()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetProfile\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetGameHistory()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetGameHistory\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetVideoHistory()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetVideoHistory\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetMusicHistory()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetMusicHistory\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetExerciseInfo()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetExerciseInfo\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetPresence()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetPresence\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetVideoStatus()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetVideoStatus\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetMusicStatus()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetMusicStatus\n");
+        return L"";
     }
     hstring PermissionIdConstants::PlayMultiplayer()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::PlayMultiplayer\n");
+        return L"";
     }
     hstring PermissionIdConstants::BroadcastWithTwitch()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::BroadcastWithTwitch\n");
+        return L"";
     }
     hstring PermissionIdConstants::ViewTargetUserCreatedContent()
     {
-        throw hresult_not_implemented();
+        printf("PermissionIdConstants::ViewTargetUserCreatedContent\n");
+        return L"";
     }
 }
